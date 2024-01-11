@@ -1,0 +1,147 @@
+<app-nav-bar>
+  <div class="containner-app">
+    <mat-card class="card-table">
+      <mat-toolbar class="card-title">
+        <span>Dados de Entrada da Pesagem</span>
+      </mat-toolbar>
+      <mat-card class="card-table">
+
+        <div class="div-busca">
+          <form class="div-input" (ngSubmit)="onSubmit()">
+            <mat-form-field class="example-full-width">
+              <mat-label>Buscar por placa:</mat-label>
+              <input matInput placeholder="" [(ngModel)]="searchPlaca" name="searchPlaca">
+            </mat-form-field>
+
+            <button class="btn-pesq" color="primary" type="submit">
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="search"></mat-icon>
+            </button>
+
+            <button class="btn-pesq" *ngIf="searchPlaca" mat-icon-button color="warn" type="button" (click)="clearSearch()">
+              <mat-icon aria-hidden="false" aria-label="Clear icon" fontIcon="delete">Limpar</mat-icon>
+            </button>
+          </form>
+          <div class="div-button">
+            <button mat-raised-button (click)="openModal()" class="btn-novo">
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>Novo
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="entradas$ | async as entradas; else loading">
+
+          <div class="tabela-container">
+            <table mat-table [dataSource]="entradas.entradas" class="mat-elevation-z8 responsive-table">
+              <ng-container matColumnDef="placa">
+                <th mat-header-cell *matHeaderCellDef> Placa </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.placa }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="via">
+                <th mat-header-cell *matHeaderCellDef> Via </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.via }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="produto">
+                <th mat-header-cell *matHeaderCellDef> Produto </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.produto }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="fluxo">
+                <th mat-header-cell *matHeaderCellDef> Fluxo </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.fluxo }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="tab_Desconto">
+                <th mat-header-cell *matHeaderCellDef> Tabela de Desconto </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.tab_Desconto }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="deposito">
+                <th mat-header-cell *matHeaderCellDef> Depósito </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.deposito }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="transportador">
+                <th mat-header-cell *matHeaderCellDef> Transportador </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.transportador }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="endereco">
+                <th mat-header-cell *matHeaderCellDef> Endereço </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.endereco }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="doc_Frete">
+                <th mat-header-cell *matHeaderCellDef> Documento do Frete </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.doc_Frete }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="pgto_Frete">
+                <th mat-header-cell *matHeaderCellDef> Pagamento do Frete </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.pgto_Frete ? 'Sim' : 'Não' }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="observacao">
+                <th mat-header-cell *matHeaderCellDef> Observação </th>
+                <td mat-cell *matCellDef="let entrada"> {{ entrada.observacao }} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell class="actions-cell" align="center" *matHeaderCellDef> Ações </th>
+                <td mat-cell class="actions-cell" *matCellDef="let entrada">
+                  <button mat-icon-button color="primary" aria-label="Example icon button with a home icon" (click)="openModalEdit(entrada.id)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" aria-label="Example icon button with a heart icon" (click)="onDelete(entrada.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+
+          <div *ngIf="entradas.entradas?.length === 0" class="error-message">
+            Nenhum registro encontrado!
+          </div>
+
+          <mat-paginator class="pagination-comp"
+            [pageSizeOptions]="[4, 10, 15]"
+            showFirstLastButtons
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [length]="(entradas$ | async)?.totalItems || 0"
+            (page)="loadEntradas($event.pageIndex + 1, $event.pageSize)"
+            aria-label="Select page of entradas">
+          </mat-paginator>
+        </div>
+
+        <ng-template #loading>
+          <div class="error-message">
+            Nenhum registro encontrado!
+          </div>
+        </ng-template>
+        <div *ngIf="(entradaService.loading$ | async)">
+          <app-loading-modal></app-loading-modal>
+        </div>
+        <div *ngIf="entradaService.showModal">
+          <app-modal-confirm [message]="entradaService.modalMessage" (closeModal)="entradaService.showModal = false"></app-modal-confirm>
+        </div>
+
+      </mat-card>
+
+    </mat-card>
+    <app-entrada-form
+        *ngIf="showModal"
+        (closeModal)="showModal = false"
+        (entradaCreated)="onCreate($event)"
+        (entradaUpdated)="onUpdate($event.id, $event.entrada)"
+        [editEntrada]="editEntrada"
+      ></app-entrada-form>
+  </div>
+  <app-footer></app-footer>
+</app-nav-bar>

@@ -1,0 +1,55 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+
+      <mat-nav-list class="nav-list">
+        <a [routerLink]="'/entrada'" [class.custom-active]="isCurrentRoute('/entrada')">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="apps"></mat-icon>
+          Dados de Entrada
+        </a>
+
+        <a [routerLink]="'/classificacao'" [class.custom-active]="isCurrentRoute('/classificacao')">
+          <mat-icon>category</mat-icon> Classificação
+        </a>
+
+        <a [routerLink]="'/pesagem'" [class.custom-active]="isCurrentRoute('/pesagem')">
+          <mat-icon>kitchen</mat-icon> Pesagem
+        </a>
+
+      </mat-nav-list>
+
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar  class="toolbar-nav">
+      <button class="buton-nav" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="toggleSidenav()">
+        <mat-icon aria-label="Side nav toggle icon">
+          {{ (isHandset$ | async) ? 'menu' : (isMenuOpen ? 'close' : 'menu') }}
+        </mat-icon>
+      </button>
+      <div class="logo-nav" >
+        <img src="../../../../assets/img/dunamis_logo02.png" alt="" width="100px">
+      </div>
+
+      <a [routerLink]="'/home'" class="link-home" *ngIf="!(isHandset$ | async)">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
+      </a>
+
+      <button mat-button [matMenuTriggerFor]="menu" class="text-menu">Perfil / Logout <mat-icon >arrow_drop_down</mat-icon></button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item>
+            <mat-icon aria-hidden="false" aria-label="Icone de usuário">account_circle</mat-icon>
+            Meu Perfil
+          </button>
+
+          <button mat-menu-item (click)="handleLogout()">
+            <mat-icon aria-hidden="false" aria-label="Icone de logout">exit_to_app</mat-icon>
+            Logout
+          </button>
+
+        </mat-menu>
+    </mat-toolbar>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,37 @@
+<div class="container-login">
+  <div class="div-card"></div>
+  <form [formGroup]="loginForm"
+  class="div-card-login"
+  (ngSubmit)="onSubmitLoginForm()">
+
+    <div class="nav-logo"></div>
+      <h2>LOGIN</h2>
+    <div class="div-inputs">
+        <input class="input-login"
+        type="text"
+        placeholder="Usuario"
+        formControlName="username"
+        (input)="onUsernameInput($event)"
+        >
+     <input class="input-login"
+     type="password"
+     placeholder="Senha"
+     formControlName="password"
+     >
+
+     <button type="submit"
+     class="btn-Login" [disabled]="!this.loginForm.valid" >
+     Entrar</button>
+
+      <h5>Versão: 2.1.00</h5>
+
+    </div>
+  </form>
+</div>
+<div *ngIf="(loading)">
+  <app-loading-modal></app-loading-modal>
+</div>
+<div *ngIf="showModal">
+  <app-modal-confirm [message]="modalMessage" (closeModal)="showModal = false"></app-modal-confirm>
+</div>
+

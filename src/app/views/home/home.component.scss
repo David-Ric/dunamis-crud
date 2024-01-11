@@ -1,0 +1,37 @@
+.name-user {
+  position: relative;
+  width: auto;
+  transform: skewX(-20deg);
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: auto;
+  margin-top: 0px;
+  background-color: #3c7fd6;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  h1{
+    margin:0px;
+  }
+
+}
+.banner-home{
+  margin: auto;
+  margin-top: 20px;
+  width: 80%;
+  min-height: 550px;
+
+  background-image: url('../../../assets/img/logo-home-web.png');
+  background-repeat: no-repeat, repeat;
+  background-size: 100%;
+
+  @media (max-width: 767px) {
+    width: 90vw;
+    height: 20vmax;
+    background-image: url('../../../assets/img/logo-home-mobile.png');
+  }
+}
+a.active {
+  color: yellow;
+}
